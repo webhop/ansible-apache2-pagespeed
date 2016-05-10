@@ -1,0 +1,63 @@
+---
+- name: Add Apache2 PPA
+  apt_repository:
+    repo: 'ppa:ondrej/apache2'
+    update_cache: yes
+
+- name: Add Ubuntu Universe Repository
+  apt_repository:
+    repo: "deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
+    update_cache: yes
+
+- name: Install latest version of Apache
+  apt:
+    name: apache2
+    state: latest
+
+- name: Install additional modules
+  apt:
+    name: libapache2-mod-fastcgi
+    state: latest
+
+- name: Enable required apache modules
+  apache2_module: name="{{ item }}" state=present
+  with_items:
+    - actions
+    - rewrite
+    - headers
+    - expires
+
+- name: Download Google pagespeed module
+  get_url:
+    url: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
+    dest: "/tmp/pagespeed.deb"
+
+- name: Install Google pagespeed
+  apt:
+    deb: "/tmp/pagespeed.deb"
+
+- name: Delete 000-default.conf
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+
+- name: Write webhop-default.conf
+  copy:
+    src: webhop-default.conf
+    dest: /etc/apache2/sites-available/webhop-default.conf
+
+- name: Write the pagespeed module configuration
+  copy:
+    src: pagespeed.conf
+    dest: /etc/apache2/mods-enabled/pagespeed.conf
+
+- name: Symlink sites-available/webhop-default.conf to sites-enabled/webhop-default.conf
+  file:
+    src: /etc/apache2/sites-available/webhop-default.conf
+    dest: /etc/apache2/sites-enabled/webhop-default.conf
+    state: link
+
+- name: Stop apache2 service
+  service:
+    name: apache2
+    state: stopped

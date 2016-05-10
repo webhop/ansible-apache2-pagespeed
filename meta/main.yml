@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  author: Neil Saunders
+  description: Role to install the latest version of apache2 and the google pagespeed module
+  company: Beamly Ltd
+  license: MIT
+  min_ansible_version: 1.8
+  platforms:
+  - name: Ubuntu
+    versions:
+    - natty
+    - oneiric
+    - precise
+    - quantal
+    - raring
+    - saucy
+    - trusty
+  - name: Debian
+    versions:
+    - lenny
+    - squeeze
+    - wheezy
+  categories:
+    - cloud
+    - clustering
+    - networking
+dependencies: []
