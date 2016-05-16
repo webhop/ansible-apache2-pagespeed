@@ -36,6 +36,6 @@
 {% if stat_ssl_cert.stat.exists %}
   SSLEngine on
   SSLCertificateFile /etc/apache2/ssl/cert.pem
-  SSLCertificateKeyFile /etc/ssl/private/key.pem
+  SSLCertificateKeyFile /etc/apache2/ssl/key.pem
 {% endif %}
 </VirtualHost>
