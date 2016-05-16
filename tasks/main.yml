@@ -23,6 +23,9 @@
   become: no
   register: stat_ssl_cert
 
+- name: Print static registration
+  debug: var=stat_ssl_cert
+
 - name: Enable required apache modules
   apache2_module: name="{{ item }}" state=present
   with_items:
