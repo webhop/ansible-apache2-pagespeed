@@ -12,9 +12,16 @@ This role assumes the default site being provisioned is a PHP-based site using t
 Usage
 -----
 
+Basic setup:
+
 ```yaml
 roles:
     - { role: webhop.apache2 }
+```
+SSL support:
+```yaml
+roles:
+    - { role: webhop.apache2, ssl_cert=cert.pem, ssl_private_key=key.pem }
 ```
 
 Author Information

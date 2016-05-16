@@ -1,4 +1,8 @@
+{% if ssl_cert is defined %}
+<VirtualHost *:443>
+{% else %}
 <VirtualHost *:80>
+{% endif %}
 
   ServerAdmin webmaster@localhost
   DocumentRoot /var/www
@@ -29,4 +33,9 @@
   ErrorLog ${APACHE_LOG_DIR}/error.log
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 
+{% if ssl_cert is defined %}
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/cert.pem
+  SSLCertificateKeyFile /etc/ssl/private/key.pem
+{% endif %}
 </VirtualHost>
