@@ -19,6 +19,18 @@
     name: libapache2-mod-fastcgi
     state: latest
 
+- name: Copy SSL certificate in place if required
+  copy:
+    src: "{{ ssl_cert }}"
+    dst: /etc/apache2/ssl/cert.pem
+  when: ssl_cert
+
+- name: Copy SSL private key in place if required
+  copy:
+    src: "{{ ssl_private_key }}"
+    dst: /etc/apache2/ssl/key.pem
+  when: ssl_private_key
+
 - name: Enable required apache modules
   apache2_module: name="{{ item }}" state=present
   with_items:
@@ -42,8 +54,8 @@
     state: absent
 
 - name: Write webhop-default.conf
-  copy:
-    src: webhop-default.conf
+  template:
+    src: webhop-default.conf.j2
     dest: /etc/apache2/sites-available/webhop-default.conf
 
 - name: Write the pagespeed module configuration
