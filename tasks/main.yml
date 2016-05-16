@@ -21,6 +21,7 @@
 
 - local_action: stat path={{ ssl_cert }}
   register: stat_ssl_cert
+  become: no
   when: ssl_cert is defined
 
 - name: Print ssl
