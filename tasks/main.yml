@@ -23,13 +23,13 @@
   copy:
     src: "{{ ssl_cert }}"
     dst: /etc/apache2/ssl/cert.pem
-  when: ssl_cert
+  when: ssl_cert is defined
 
 - name: Copy SSL private key in place if required
   copy:
     src: "{{ ssl_private_key }}"
     dst: /etc/apache2/ssl/key.pem
-  when: ssl_private_key
+  when: ssl_private_key is defined
 
 - name: Enable required apache modules
   apache2_module: name="{{ item }}" state=present
