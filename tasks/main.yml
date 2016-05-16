@@ -19,8 +19,12 @@
     name: libapache2-mod-fastcgi
     state: latest
 
+- local_action: stat path={{ ssl_cert }}
+  register: stat_ssl_cert
+  when: ssl_cert is defined
+
 - name: Print ssl
-  debug: var=ssl_cert
+  debug: var=stat_ssl_cert
 
 - name: Copy SSL certificate in place if required
   copy:
