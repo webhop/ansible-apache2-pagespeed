@@ -19,7 +19,10 @@
     name: libapache2-mod-fastcgi
     state: latest
 
-- local_action: stat path="/etc/apache2/ssl/cert.pem"
+- local_action:
+    stat:
+      path: "/etc/apache2/ssl/cert.pem"
+  become: no
   register: stat_ssl_cert
 
 - name: Enable required apache modules
