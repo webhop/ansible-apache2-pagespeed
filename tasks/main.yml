@@ -19,8 +19,9 @@
     name: libapache2-mod-fastcgi
     state: latest
 
-- local_action: stat path="/etc/apache2/ssl/cert.pem"
-  become: no
+- name: Check if SSL certificates are installed
+  stat:
+    path: "/etc/apache2/ssl/cert.pem"
   register: stat_ssl_cert
 
 - name: Print static registration
