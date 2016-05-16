@@ -1,4 +1,4 @@
-{% if ssl_cert.stat.exists %}
+{% if stat_ssl_cert.stat.exists %}
 <VirtualHost *:443>
 {% else %}
 <VirtualHost *:80>
@@ -33,7 +33,7 @@
   ErrorLog ${APACHE_LOG_DIR}/error.log
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-{% if ssl_cert.stat.exists %}
+{% if stat_ssl_cert.stat.exists %}
   SSLEngine on
   SSLCertificateFile /etc/apache2/ssl/cert.pem
   SSLCertificateKeyFile /etc/ssl/private/key.pem
