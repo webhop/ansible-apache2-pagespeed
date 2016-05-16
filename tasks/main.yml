@@ -19,6 +19,9 @@
     name: libapache2-mod-fastcgi
     state: latest
 
+- name: Print ssl
+  debug: var=ssl_cert
+
 - name: Copy SSL certificate in place if required
   copy:
     src: "{{ ssl_cert }}"
@@ -38,6 +41,7 @@
     - rewrite
     - headers
     - expires
+    - ssl
 
 - name: Download Google pagespeed module
   get_url:
