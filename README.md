@@ -18,11 +18,13 @@ Basic setup:
 roles:
     - { role: webhop.apache2 }
 ```
-SSL support:
-```yaml
-roles:
-    - { role: webhop.apache2, ssl_cert=cert.pem, ssl_private_key=key.pem }
-```
+
+This role will configure Apache to EITHER server HTTP or HTTPS requests, but not both.
+
+In order to configure HTTPS, the following files must exist:
+
+/etc/apache2/ssl/cert.pem
+/etc/apache2/ssl/key.pem
 
 Author Information
 ------------------

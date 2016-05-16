@@ -19,25 +19,8 @@
     name: libapache2-mod-fastcgi
     state: latest
 
-- local_action: stat path={{ ssl_cert }}
+- local_action: stat path="/etc/apache2/ssl/cert.pem"
   register: stat_ssl_cert
-  become: no
-  when: ssl_cert is defined
-
-- name: Print ssl
-  debug: var=stat_ssl_cert
-
-- name: Copy SSL certificate in place if required
-  copy:
-    src: "{{ ssl_cert }}"
-    dst: /etc/apache2/ssl/cert.pem
-  when: ssl_cert is defined
-
-- name: Copy SSL private key in place if required
-  copy:
-    src: "{{ ssl_private_key }}"
-    dst: /etc/apache2/ssl/key.pem
-  when: ssl_private_key is defined
 
 - name: Enable required apache modules
   apache2_module: name="{{ item }}" state=present
