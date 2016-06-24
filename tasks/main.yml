@@ -52,10 +52,10 @@
     src: webhop-default.conf.j2
     dest: /etc/apache2/sites-available/webhop-default.conf
 
-- name: Write the pagespeed module configuration
-  copy:
-    src: pagespeed.conf
-    dest: /etc/apache2/mods-enabled/pagespeed.conf
+# - name: Write the pagespeed module configuration
+#   copy:
+#     src: pagespeed.conf
+#     dest: /etc/apache2/mods-enabled/pagespeed.conf
 
 - name: Symlink sites-available/webhop-default.conf to sites-enabled/webhop-default.conf
   file:
