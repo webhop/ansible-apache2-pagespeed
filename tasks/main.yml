@@ -57,6 +57,16 @@
 #     src: pagespeed.conf
 #     dest: /etc/apache2/mods-enabled/pagespeed.conf
 
+# So it turns out by default when pagespeed is installed its also enabled in apache modules
+# We want to turn it off so remove the symlinks in mods-enabled
+- name: Remove pagespeed symlinks from mods-enabled
+  file:
+    state: absent
+    path: "/etc/apache2/mods-enabled/{{ item }}"
+  with_items:
+    - pagespeed.conf
+    - pagespeed.load
+
 - name: Symlink sites-available/webhop-default.conf to sites-enabled/webhop-default.conf
   file:
     src: /etc/apache2/sites-available/webhop-default.conf
