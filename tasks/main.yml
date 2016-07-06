@@ -6,7 +6,7 @@
 
 - name: Add Ubuntu Universe Repository
   apt_repository:
-    repo: "deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
+    repo: "deb http://eu-central-1.ec2.archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
     update_cache: yes
 
 - name: Install latest version of Apache
