@@ -1,1 +1,2 @@
 apache_force_ssl: true
+docroot: /var/www
