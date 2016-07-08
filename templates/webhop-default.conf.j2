@@ -56,7 +56,7 @@
   <IfModule mod_fastcgi.c>
     AddType application/x-httpd-fastphp5 .php
     Action application/x-httpd-fastphp5 /php5-fcgi-ssl
-    Alias /php5-fcgi /usr/lib/cgi-bin/php5-fcgi-ssl
+    Alias /php5-fcgi-ssl /usr/lib/cgi-bin/php5-fcgi-ssl
     FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi-ssl -socket /var/run/php5-fpm.sock -pass-header Authorization
 
     <Directory /usr/lib/cgi-bin>
