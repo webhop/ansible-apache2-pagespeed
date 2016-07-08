@@ -1,7 +1,7 @@
 <VirtualHost *:80>
 
   ServerAdmin webmaster@localhost
-  DocumentRoot /var/www
+  DocumentRoot {{ docroot }}
 
   ExpiresActive On
   ExpiresDefault "access plus 2 months"
@@ -11,7 +11,7 @@
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
 
-  <Directory /var/www>
+  <Directory {{ docroot }}>
     AllowOverride All
   </Directory>
 
@@ -37,7 +37,7 @@
 <VirtualHost *:443>
 
   ServerAdmin webmaster@localhost
-  DocumentRoot /var/www
+  DocumentRoot {{ docroot }}
   {% if apache_force_ssl %}
   SetEnv HTTPS on
   {% endif %}
@@ -49,7 +49,7 @@
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
 
-  <Directory /var/www>
+  <Directory {{ docroot }}>
     AllowOverride All
   </Directory>
 
