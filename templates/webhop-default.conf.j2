@@ -1,14 +1,8 @@
-{% if stat_ssl_cert.stat.exists %}
-<VirtualHost *:443>
-{% else %}
 <VirtualHost *:80>
-{% endif %}
 
   ServerAdmin webmaster@localhost
   DocumentRoot /var/www
-  {% if apache_force_ssl %}
-  SetEnv HTTPS on
-  {% endif %}
+
   ExpiresActive On
   ExpiresDefault "access plus 2 months"
   ExpiresByType application/x-font-woff "access plus 1 year"
@@ -35,12 +29,50 @@
   ErrorLog ${APACHE_LOG_DIR}/error.log
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 
+{{ virtualhost_additions | default('') | indent(2, true) }}
+
+</VirtualHost>
+
 {% if stat_ssl_cert.stat.exists %}
+<VirtualHost *:443>
+
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www
+  {% if apache_force_ssl %}
+  SetEnv HTTPS on
+  {% endif %}
+  ExpiresActive On
+  ExpiresDefault "access plus 2 months"
+  ExpiresByType application/x-font-woff "access plus 1 year"
+  ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+
+  Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
+  Header edit Surrogate-Key ;.* ''
+
+  <Directory /var/www>
+    AllowOverride All
+  </Directory>
+
+  <IfModule mod_fastcgi.c>
+    AddType application/x-httpd-fastphp5 .php
+    Action application/x-httpd-fastphp5 /php5-fcgi-ssl
+    Alias /php5-fcgi-ssl /usr/lib/cgi-bin/php5-fcgi-ssl
+    FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi-ssl -socket /var/run/php5-fpm.sock -pass-header Authorization
+
+    <Directory /usr/lib/cgi-bin>
+      Require all granted
+    </Directory>
+  </IfModule>
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+
   SSLEngine on
   SSLCertificateFile /etc/apache2/ssl/cert.pem
   SSLCertificateKeyFile /etc/apache2/ssl/key.pem
-{% endif %}
 
 {{ virtualhost_additions | default('') | indent(2, true) }}
 
 </VirtualHost>
+
+{% endif %}
