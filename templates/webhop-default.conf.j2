@@ -3,6 +3,9 @@
   ServerAdmin webmaster@localhost
   DocumentRoot {{ docroot }}
 
+  {% if apache_force_ssl %}
+  SetEnv HTTPS on
+  {% endif %}
   ExpiresActive On
   ExpiresDefault "access plus 2 months"
   ExpiresByType application/x-font-woff "access plus 1 year"
@@ -38,9 +41,7 @@
 
   ServerAdmin webmaster@localhost
   DocumentRoot {{ docroot }}
-  {% if apache_force_ssl %}
   SetEnv HTTPS on
-  {% endif %}
   ExpiresActive On
   ExpiresDefault "access plus 2 months"
   ExpiresByType application/x-font-woff "access plus 1 year"
