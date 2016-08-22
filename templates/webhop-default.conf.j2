@@ -14,6 +14,10 @@
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
 
+  # Expose ping.php on /healthcheck/gtg
+  RewriteEngine on
+  RewriteRule "^/healthcheck/gtg$" "/ping.php" [PT]
+
   <Directory {{ docroot }}>
     AllowOverride All
   </Directory>
