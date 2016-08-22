@@ -16,7 +16,7 @@
 
   # Expose ping.php on /service/healthcheck/gtg
   RewriteEngine on
-  RewriteRule "^/healthcheck/gtg$" "/ping.php" [PT]
+  RewriteRule "^/service/healthcheck/gtg$" "/ping.php" [PT]
 
   <Directory {{ docroot }}>
     AllowOverride All
