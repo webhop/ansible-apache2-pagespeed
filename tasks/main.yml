@@ -52,6 +52,14 @@
     src: webhop-default.conf.j2
     dest: /etc/apache2/sites-available/webhop-default.conf
 
+- name: Copy the healthcheck script into the webroot
+  copy:
+    src: files/ping.php
+    dest: /var/www/ping.php
+    owner: www-data
+    group: www-data
+    mode: 0700
+
 # - name: Write the pagespeed module configuration
 #   copy:
 #     src: pagespeed.conf
