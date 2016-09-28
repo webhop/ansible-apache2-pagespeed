@@ -18,6 +18,9 @@
   RewriteEngine on
   RewriteRule "^/service/healthcheck/gtg$" "/ping.php" [PT]
 
+  # Expose se4.php on /service/status
+  RewriteRule "^/service/status$" "/se4.php" [PT]
+
   <Directory {{ docroot }}>
     AllowOverride All
   </Directory>
@@ -53,6 +56,13 @@
 
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
+
+  # Expose ping.php on /service/healthcheck/gtg
+  RewriteEngine on
+  RewriteRule "^/service/healthcheck/gtg$" "/ping.php" [PT]
+
+  # Expose se4.php on /service/status
+  RewriteRule "^/service/status$" "/se4.php" [PT]
 
   <Directory {{ docroot }}>
     AllowOverride All
