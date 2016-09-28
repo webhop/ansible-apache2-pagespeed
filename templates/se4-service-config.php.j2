@@ -4,10 +4,10 @@ header('Content-Type: application/json');
 
 //https://www.centos.org/docs/5/html/5.1/Deployment_Guide/s2-proc-uptime.html
 $uptime = trim( file_get_contents( '/proc/uptime' ) );
-$uptime_seconds = explode( ' ', $uptime[0] );
+$uptime_seconds = explode( ' ', $uptime )[0];
 
 $service_data = array('artifact_id'   => '{{ COMPONENT_NAME }}',
-					  'built_when'    => {{ ansible_date_time.iso8601 }},
+					  'built_when'    => '{{ ansible_date_time.iso8601 }}',
 					  'current_time'  => date(DATE_ISO8601),
 					  'git_sha1'      => '{{ COMPONENT_SHA }}',
 					  'machine_name'  => gethostname(),
