@@ -52,6 +52,14 @@
     src: webhop-default.conf.j2
     dest: /etc/apache2/sites-available/webhop-default.conf
 
+- name: Copy the service status script into webroot
+  template:
+    src: se4-service-config.php.j2
+    dest: /var/www/se4.php
+    owner: www-data
+    group: www-data
+    mode: 0700
+
 - name: Copy the healthcheck script into the webroot
   copy:
     src: files/ping.php
