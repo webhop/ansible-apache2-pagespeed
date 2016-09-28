@@ -1,6 +1,9 @@
 <?php
 
 header('Content-Type: application/json');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
 //https://www.centos.org/docs/5/html/5.1/Deployment_Guide/s2-proc-uptime.html
 $uptime = trim( file_get_contents( '/proc/uptime' ) );
