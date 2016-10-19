@@ -43,6 +43,18 @@
 
 </VirtualHost>
 
+{% if enable_mod_status %}
+ExtendedStatus On
+
+<IfModule mod_status.c>
+  <Location "{{ status_endpoint }}">
+    SetHandler server-status
+    Require local
+    Require ip 127.0.0.1
+  </Location>
+</IfModule>
+{% endif %}
+
 {% if stat_ssl_cert.stat.exists %}
 <VirtualHost *:443>
 

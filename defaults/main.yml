@@ -1,6 +1,8 @@
 apache_force_ssl: true
 docroot: /var/www
 enable_pagespeed: false
+enable_mod_status: false
+mod_status_endpoint: "/server-status"
 COMPONENT_NAME: vagrant
 COMPONENT_SHA: vagrant
 COMPONENT_VERSION: vagrant

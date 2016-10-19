@@ -33,6 +33,10 @@
     - expires
     - ssl
 
+- name: Enable mod_status apache module
+  apache2_module: name=mod_status state=present
+  when: enable_mod_status
+
 - name: Download Google pagespeed module
   get_url:
     url: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
