@@ -14,6 +14,10 @@ This role assumes the default site being provisioned is a PHP-based site using t
 ##### Defaults
 
 - `apache_force_ssl` - Forces apache to respond with https using `SetEnv https on` (**True**)
+- `docroot` - Filesystem path for web assets (**/var/www**)
+- `enable_pagespeed` - Enables google pagespeed integration (**false**)
+- `enabled_mod_status` - Enables apache2 status module and endpoint (**false**)
+- `mod_status_endpoint` - The URL endpoint to expose apache status (**/server-status**)
 
 
 Usage
@@ -33,6 +37,12 @@ roles:
     - { role: webhop.apache2, apache_force_ssl: false }
 ```
 
+To enable stats endpoint at /apache-stats:
+
+```yaml
+roles:
+    - { role: webhop.apache2, enable_mod_status: false, mod_status_endpoint: '/apache-stats' }
+```
 
 This role will configure Apache to EITHER server HTTP or HTTPS requests, but not both.
 
@@ -45,3 +55,4 @@ Author Information
 ------------------
 
 * Neil Saunders - neil@beamly.com
+* Vik Bhatti - vik@beamly.com
