@@ -46,7 +46,7 @@
   lineinfile:
     dest: "{{ docroot }}/.htaccess"
     state: present
-    line: "RewriteCond %{REQUEST_URI} !^{{ mod_status_endpoint }}"
+    line: "RewriteCond %{REQUEST_URI} !^{{ mod_status_endpoint }}   # MANAGED BY ANSIBLE - webhop.apache2-pagespeed"
     insertbefore: "RewriteRule ^ index.php [L]"
   when: stat_htaccess.stat.exists
 
