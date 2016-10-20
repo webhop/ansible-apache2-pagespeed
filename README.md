@@ -16,7 +16,8 @@ This role assumes the default site being provisioned is a PHP-based site using t
 - `apache_force_ssl` - Forces apache to respond with https using `SetEnv https on` (**True**)
 - `docroot` - Filesystem path for web assets (**/var/www**)
 - `enable_pagespeed` - Enables google pagespeed integration (**false**)
-- `enabled_mod_status` - Enables apache2 status module and endpoint (**false**)
+- `enable_mod_status` - Enables apache2 status module and endpoint (**true**)
+- `enable_php_fpm_status` - Enables passthrough endpoint for php-fpm status (**true**)
 - `mod_status_endpoint` - The URL endpoint to expose apache status (**/server-status**)
 
 

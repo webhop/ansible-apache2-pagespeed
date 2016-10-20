@@ -49,6 +49,13 @@ ExtendedStatus On
   </IfModule>
   {% endif %}
 
+  {% if enable_php_fpm_status %}
+  <LocationMatch '/fpm-status'>
+    SetHandler php5-fcgi-virt
+    Action php5-fcgi-virt /php5-fcgi virtual
+  </LocationMatch>
+  {% endif %}
+
   ErrorLog ${APACHE_LOG_DIR}/error.log
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 
