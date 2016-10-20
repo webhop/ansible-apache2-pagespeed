@@ -1,3 +1,6 @@
+{% if enable_mod_status %}
+ExtendedStatus On
+{% endif %}
 <VirtualHost *:80>
 
   ServerAdmin webmaster@localhost
@@ -36,6 +39,16 @@
     </Directory>
   </IfModule>
 
+  {% if enable_mod_status %}
+  <IfModule mod_status.c>
+    <Location "{{ mod_status_endpoint }}">
+      SetHandler server-status
+      Require local
+      Require ip 127.0.0.1
+    </Location>
+  </IfModule>
+  {% endif %}
+
   ErrorLog ${APACHE_LOG_DIR}/error.log
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 
@@ -43,17 +56,6 @@
 
 </VirtualHost>
 
-{% if enable_mod_status %}
-ExtendedStatus On
-
-<IfModule mod_status.c>
-  <Location "{{ status_endpoint }}">
-    SetHandler server-status
-    Require local
-    Require ip 127.0.0.1
-  </Location>
-</IfModule>
-{% endif %}
 
 {% if stat_ssl_cert.stat.exists %}
 <VirtualHost *:443>
