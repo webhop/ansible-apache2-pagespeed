@@ -34,7 +34,7 @@
     - ssl
 
 - name: Enable mod_status apache module
-  apache2_module: name=mod_status state=present
+  apache2_module: name=status state=present
   when: enable_mod_status
 
 - name: Check if htaccess file is present
