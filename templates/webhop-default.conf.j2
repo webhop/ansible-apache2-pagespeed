@@ -1,3 +1,6 @@
+{% if enable_mod_status %}
+ExtendedStatus On
+{% endif %}
 <VirtualHost *:80>
 
   ServerAdmin webmaster@localhost
@@ -36,12 +39,30 @@
     </Directory>
   </IfModule>
 
+  {% if enable_mod_status %}
+  <IfModule mod_status.c>
+    <Location "{{ mod_status_endpoint }}">
+      SetHandler server-status
+      Require local
+      Require ip 127.0.0.1
+    </Location>
+  </IfModule>
+  {% endif %}
+
+  {% if enable_php_fpm_status %}
+  <LocationMatch '/fpm-status'>
+    SetHandler php5-fcgi-virt
+    Action php5-fcgi-virt /php5-fcgi virtual
+  </LocationMatch>
+  {% endif %}
+
   ErrorLog ${APACHE_LOG_DIR}/error.log
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 
 {{ virtualhost_additions | default('') | indent(2, true) }}
 
 </VirtualHost>
+
 
 {% if stat_ssl_cert.stat.exists %}
 <VirtualHost *:443>
