@@ -85,18 +85,17 @@
     group: www-data
     mode: 0700
 
-# - name: Write the pagespeed module configuration
-#   copy:
-#     src: pagespeed.conf
-#     dest: /etc/apache2/mods-enabled/pagespeed.conf
+- name: Write the pagespeed module configuration
+  copy:
+    src: pagespeed.conf
+    dest: /etc/apache2/mods-available/pagespeed.conf
 
-- name: Remove pagespeed symlinks from mods-enabled
-  file:
-    state: absent
-    path: "/etc/apache2/mods-enabled/{{ item }}"
-  with_items:
-    - pagespeed.conf
-    - pagespeed.load
+- name: Enable the pagespeed module
+  apache2_module: state=present name=pagespeed
+  when: enable_pagespeed
+
+- name: Disable the pagespeed module
+  apache2_module: state=absent name=pagespeed
   when: not enable_pagespeed
 
 - name: Symlink sites-available/webhop-default.conf to sites-enabled/webhop-default.conf
