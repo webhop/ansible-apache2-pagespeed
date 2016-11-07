@@ -7,3 +7,4 @@ mod_status_endpoint: "/server-status"
 COMPONENT_NAME: vagrant
 COMPONENT_SHA: vagrant
 COMPONENT_VERSION: vagrant
+php_fpm_socket_path: '/var/run/php/php5.6-fpm.sock'
