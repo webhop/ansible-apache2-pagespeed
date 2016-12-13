@@ -111,3 +111,4 @@
 
 - name: Apply all Ubuntu security updates
   command: /usr/bin/unattended-upgrade
+  when: not skip_security_updates|default(False)
