@@ -24,4 +24,8 @@ galaxy_info:
     - cloud
     - clustering
     - networking
-dependencies: []
+dependencies:
+  - name: awslogs
+    src: git+git@github.com:webhop/ansible-awslogs.git
+    version: master
+    when: enable_logging
