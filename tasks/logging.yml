@@ -1,0 +1,32 @@
+# agent_config_dir variable comes form awslogs role
+- name: "Install the apache config template into {{ agent_config_dir }}"
+  copy:
+    src: apache-awslogs-agent.conf.j2
+    dest: "{{ agent_config_dir }}/apache.conf.j2"
+
+- name: Add log_group configuration block for apache
+  blockinfile:
+    dest: "{{ scripts_dir }}/logs_group_configuration.py"
+    create: no
+    insertafter: "COMPONENT_SPECIFIC_CONF_BLOCKS_FOLLOW"
+    marker: "# {mark} APACHE LOG CONFIG"
+    block: |
+      '%(env)s-%(brand)s-/var/log/apache2/error.log': {
+          'retention_days': 14,
+          'metric_filters':
+          [
+              {
+                  'name': '%(env)s-%(brand)s-apache-log-errors',
+                  'filter_pattern': 'Error',
+                  'metric_transformations':
+                  [
+                      {
+                          'metricName': 'ApacheErrors',
+                          'metricNamespace': 'WEBHOP',
+                          'metricValue': '1',
+                          'defaultValue': 0
+                      }
+                  ]
+              }
+          ]
+      },
