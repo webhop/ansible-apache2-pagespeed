@@ -1,4 +1,4 @@
-# awslogs_agent_config_dir variable comes form awslogs role
+# scripts_dir and awslogs_agent_config_dir variables come from the awslogs role
 - name: "Install the apache config template into {{ awslogs_agent_config_dir }}"
   copy:
     src: apache-awslogs-agent.conf.j2
