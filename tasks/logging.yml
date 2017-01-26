@@ -12,7 +12,7 @@
     marker: "# {mark} APACHE LOG CONFIG"
     block: |
       '%(env)s-%(brand)s-/var/log/apache2/error.log': {
-          'retention_days': 14,
+          'retention_days': 7,
           'metric_filters':
           [
               {
@@ -29,4 +29,7 @@
                   ]
               }
           ]
+      },
+      '%(env)s-%(brand)s-/var/log/apache2/access.log': {
+          'retention_days': 1
       },
