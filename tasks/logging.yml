@@ -1,4 +1,4 @@
-# scripts_dir and awslogs_agent_config_dir variables come from the awslogs role
+# awslogs_scripts_dir and awslogs_agent_config_dir variables come from the awslogs role
 - name: "Install the apache config template into {{ awslogs_agent_config_dir }}"
   copy:
     src: apache-awslogs-agent.conf.j2
@@ -6,7 +6,7 @@
 
 - name: Add log_group configuration block for apache
   blockinfile:
-    dest: "{{ scripts_dir }}/logs_group_configuration.py"
+    dest: "{{ awslogs_scripts_dir }}/logs_group_configuration.py"
     create: no
     insertafter: "COMPONENT_SPECIFIC_CONF_BLOCKS_FOLLOW"
     marker: "# {mark} APACHE LOG CONFIG"
