@@ -27,5 +27,5 @@ galaxy_info:
 dependencies:
   - name: awslogs
     src: git+git@github.com:webhop/ansible-awslogs.git
-    version: master
+    version: origin/simplify-logging-config
     when: enable_logging
