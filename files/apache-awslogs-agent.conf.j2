@@ -4,3 +4,10 @@ log_group_name = {{ env }}-{{ brand }}-/var/log/apache2/error.log
 log_stream_name = {instance_id}
 datetime_format = [%a %b %d %H:%M:%S.%f %Y]
 batch_size = 10
+
+[/var/log/apache2/access.log]
+file = /var/log/apache2/access.log
+log_group_name = {{ env }}-{{ brand }}-/var/log/apache2/access.log
+log_stream_name = {instance_id}
+datetime_format = [%a %b %d %H:%M:%S.%f %Y]
+batch_size = 10
