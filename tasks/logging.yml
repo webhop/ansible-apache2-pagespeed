@@ -1,3 +1,3 @@
 # register this component with awslogs using log_config
 - name: Setup logging for Apache logs
-  include: ../../awslogs/tasks/component-setup.yml config=log_config awslogs_component=apache2
+  include: ../../awslogs/tasks/component-setup.yml awslogs_config=log_config awslogs_component=apache2
