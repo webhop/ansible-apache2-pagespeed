@@ -20,7 +20,7 @@ log_config:
           - metricName: ApacheErrors
             metricNamespace: WEBHOP
             metricValue: '1'
-            default_value: 0
+            defaultValue: 0
 
   apache_access:
     log_file: "/var/log/apache2/access.log"
