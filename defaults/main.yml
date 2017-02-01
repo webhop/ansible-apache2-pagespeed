@@ -17,9 +17,9 @@ log_config:
       - name: "apache-log-errors"
         pattern: Error
         transformations:
-          - name: ApacheErrors
-            namespace: WEBHOP
-            value: '1'
+          - metricName: ApacheErrors
+            metricNamespace: WEBHOP
+            metricValue: '1'
             default_value: 0
 
   apache_access:
