@@ -1,35 +1,3 @@
-# awslogs_scripts_dir and awslogs_agent_config_dir variables come from the awslogs role
-- name: "Install the apache config template into {{ awslogs_agent_config_dir }}"
-  copy:
-    src: apache-awslogs-agent.conf.j2
-    dest: "{{ awslogs_agent_config_dir }}/apache.conf.j2"
-
-- name: Add log_group configuration block for apache
-  blockinfile:
-    dest: "{{ awslogs_scripts_dir }}/logs_group_configuration.py"
-    create: no
-    insertafter: "COMPONENT_SPECIFIC_CONF_BLOCKS_FOLLOW"
-    marker: "# {mark} APACHE LOG CONFIG"
-    block: |
-      '%(env)s-%(brand)s-/var/log/apache2/error.log': {
-          'retention_days': 7,
-          'metric_filters':
-          [
-              {
-                  'name': '%(env)s-%(brand)s-apache-log-errors',
-                  'filter_pattern': 'Error',
-                  'metric_transformations':
-                  [
-                      {
-                          'metricName': 'ApacheErrors',
-                          'metricNamespace': 'WEBHOP',
-                          'metricValue': '1',
-                          'defaultValue': 0
-                      }
-                  ]
-              }
-          ]
-      },
-      '%(env)s-%(brand)s-/var/log/apache2/access.log': {
-          'retention_days': 1
-      },
+# register this component with awslogs using log_config
+- name: Setup logging for Apache logs
+  include: ../../awslogs/tasks/component-setup.yml awslogs_config=log_config awslogs_component=apache2

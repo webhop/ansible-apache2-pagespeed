@@ -9,3 +9,19 @@ COMPONENT_SHA: vagrant
 COMPONENT_VERSION: vagrant
 php_fpm_socket_path: '/var/run/php/php5.6-fpm.sock'
 enable_logging: true
+log_config:
+  apache_error:
+    log_file: "/var/log/apache2/error.log"
+    retention: 7
+    metric_filters:
+      - name: "apache-log-errors"
+        pattern: Error
+        transformations:
+          - metricName: ApacheErrors
+            metricNamespace: WEBHOP
+            metricValue: '1'
+            defaultValue: 0
+
+  apache_access:
+    log_file: "/var/log/apache2/access.log"
+    retention: 1
