@@ -3,21 +3,25 @@
   apt_repository:
     repo: 'ppa:ondrej/apache2'
     update_cache: yes
+  tags: [ provision ]
 
 - name: Add Ubuntu Universe Repository
   apt_repository:
     repo: "deb http://eu-central-1.ec2.archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
     update_cache: yes
+  tags: [ provision ]
 
 - name: Install latest version of Apache
   apt:
     name: apache2
     state: latest
+  tags: [ provision ]
 
 - name: Install additional modules
   apt:
     name: libapache2-mod-fastcgi
     state: latest
+  tags: [ provision ]
 
 - name: Check if SSL certificates are installed
   stat:
@@ -54,10 +58,12 @@
   get_url:
     url: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
     dest: "/tmp/pagespeed.deb"
+  tags: [ provision ]
 
 - name: Install Google pagespeed
   apt:
     deb: "/tmp/pagespeed.deb"
+  tags: [ provision ]
 
 - name: Delete 000-default.conf
   file:
@@ -108,10 +114,12 @@
   service:
     name: apache2
     state: stopped
+  tags: [ bake ]
 
 - name: Apply all Ubuntu security updates
   command: /usr/bin/unattended-upgrade
   when: not skip_security_updates|default(False)
+  tags: [ security ]
 
 - include: logging.yml
   when: enable_logging
