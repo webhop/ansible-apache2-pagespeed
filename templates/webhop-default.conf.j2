@@ -10,7 +10,15 @@ ExtendedStatus On
   SetEnv HTTPS on
   {% endif %}
   ExpiresActive On
-  ExpiresDefault "access plus 2 months"
+  ExpiresByType text/html              "access plus 2 months"
+  ExpiresByType application/javascript "access plus 2 months"
+  ExpiresByType audio/ogg              "access plus 2 months"
+  ExpiresByType image/gif              "access plus 2 months"
+  ExpiresByType image/jpeg             "access plus 2 months"
+  ExpiresByType image/png              "access plus 2 months"
+  ExpiresByType video/mp4              "access plus 2 months"
+  ExpiresByType video/ogg              "access plus 2 months"
+  ExpiresByType video/webm             "access plus 2 months"
   ExpiresByType application/x-font-woff "access plus 1 year"
   ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
 
@@ -71,10 +79,17 @@ ExtendedStatus On
   DocumentRoot {{ docroot }}
   SetEnv HTTPS on
   ExpiresActive On
-  ExpiresDefault "access plus 2 months"
+  ExpiresByType text/html              "access plus 2 months"
+  ExpiresByType application/javascript "access plus 2 months"
+  ExpiresByType audio/ogg              "access plus 2 months"
+  ExpiresByType image/gif              "access plus 2 months"
+  ExpiresByType image/jpeg             "access plus 2 months"
+  ExpiresByType image/png              "access plus 2 months"
+  ExpiresByType video/mp4              "access plus 2 months"
+  ExpiresByType video/ogg              "access plus 2 months"
+  ExpiresByType video/webm             "access plus 2 months"
   ExpiresByType application/x-font-woff "access plus 1 year"
   ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
-
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
 
