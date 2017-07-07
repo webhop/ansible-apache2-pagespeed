@@ -16,7 +16,7 @@ ExtendedStatus On
   Header edit Surrogate-Key ;.* ''
   Header set Cache-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
   Header unset Surrogate-Control "expr=%{REQUEST_STATUS} == 404"
-  Header set Surrogate-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
+  Header set Surrogate-Control max-age=600 "expr=%{REQUEST_STATUS} == 404"
 
   # Expose ping.php on /service/healthcheck/gtg
   RewriteEngine on
@@ -79,7 +79,7 @@ ExtendedStatus On
   Header edit Surrogate-Key ;.* ''
   Header set Cache-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
   Header unset Surrogate-Control "expr=%{REQUEST_STATUS} == 404"
-  Header set Surrogate-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
+  Header set Surrogate-Control max-age=600 "expr=%{REQUEST_STATUS} == 404"
 
   # Expose ping.php on /service/healthcheck/gtg
   RewriteEngine on
