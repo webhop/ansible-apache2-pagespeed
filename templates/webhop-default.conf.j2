@@ -15,6 +15,7 @@ ExtendedStatus On
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
   Header set Cache-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
+  Header set Surrogate-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
 
   # Expose ping.php on /service/healthcheck/gtg
   RewriteEngine on
@@ -69,13 +70,14 @@ ExtendedStatus On
   ServerAdmin webmaster@localhost
   DocumentRoot {{ docroot }}
   SetEnv HTTPS on
-  
+
   ExpiresActive On
   ExpiresDefault "access plus 2 months"
 
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
   Header set Cache-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
+  Header set Surrogate-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
 
   # Expose ping.php on /service/healthcheck/gtg
   RewriteEngine on
