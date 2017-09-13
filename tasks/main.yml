@@ -40,11 +40,6 @@
   register: apache2_module_output
   changed_when: apache2_module_output.stdout.find('mpm_event already') == -1
 
-- name: Disable Apache2 worker MPM module
-  command: "a2dismod mpm_worker"
-  register: apache2_module_output
-  changed_when: apache2_module_output.stdout.find('mpm_worker already') == -1
-
 - name: Check if SSL certificates are installed
   stat:
     path: "/etc/apache2/ssl/cert.pem"
