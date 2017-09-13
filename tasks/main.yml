@@ -14,6 +14,13 @@
     name: apache2
     state: latest
 
+- name: Ensure the docroot exists
+  file:
+    path: "{{ docroot }}"
+    state: directory
+    owner: www-data
+    group: www-data
+
 - name: Install additional modules
   apt:
     name: libapache2-mod-fastcgi
@@ -72,7 +79,7 @@
 - name: Copy the service status script into webroot
   template:
     src: se4-service-config.php.j2
-    dest: /var/www/se4.php
+    dest: "{{ docroot }}/se4.php"
     owner: www-data
     group: www-data
     mode: 0700
@@ -80,7 +87,7 @@
 - name: Copy the healthcheck script into the webroot
   copy:
     src: files/ping.php
-    dest: /var/www/ping.php
+    dest: "{{ docroot }}/ping.php"
     owner: www-data
     group: www-data
     mode: 0700
