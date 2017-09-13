@@ -26,6 +26,20 @@
     name: libapache2-mod-fastcgi
     state: latest
 
+- name: Disable Apache2 prefork MPM modules
+  command: "a2dismod {{ item }}"
+  with_items:
+    - php5.6
+    - mpm_prefork
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find(item + ' already') == -1
+  ignore_errors: true
+
+- name: Enable Apache2 event MPM module
+  command: "a2enmod mpm_event"
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find('mpm_event already') == -1
+
 - name: Check if SSL certificates are installed
   stat:
     path: "/etc/apache2/ssl/cert.pem"

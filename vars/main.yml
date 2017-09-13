@@ -1,0 +1,2 @@
+docroot: /var/www
+php_fpm_socket_path: '/var/run/php/php5.6-fpm.sock'
