@@ -1,5 +1,5 @@
 apache_force_ssl: true
-enable_pagespeed: true
+enable_pagespeed: False
 enable_mod_status: true
 enable_php_fpm_status: true
 mod_status_endpoint: "/server-status"
