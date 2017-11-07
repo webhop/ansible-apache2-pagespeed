@@ -11,11 +11,12 @@ ExtendedStatus On
   {% endif %}
   ExpiresActive On
   ExpiresDefault "access plus 2 months"
-  ExpiresByType application/x-font-woff "access plus 1 year"
-  ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
 
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
+  Header set Cache-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
+  Header unset Surrogate-Control "expr=%{REQUEST_STATUS} == 404"
+  Header set Surrogate-Control max-age=600 "expr=%{REQUEST_STATUS} == 404"
 
   # Expose ping.php on /service/healthcheck/gtg
   RewriteEngine on
@@ -70,13 +71,15 @@ ExtendedStatus On
   ServerAdmin webmaster@localhost
   DocumentRoot {{ docroot }}
   SetEnv HTTPS on
+
   ExpiresActive On
   ExpiresDefault "access plus 2 months"
-  ExpiresByType application/x-font-woff "access plus 1 year"
-  ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
 
   Header set Surrogate-Key "expr=%{CONTENT_TYPE}"
   Header edit Surrogate-Key ;.* ''
+  Header set Cache-Control s-maxage=600 "expr=%{REQUEST_STATUS} == 404"
+  Header unset Surrogate-Control "expr=%{REQUEST_STATUS} == 404"
+  Header set Surrogate-Control max-age=600 "expr=%{REQUEST_STATUS} == 404"
 
   # Expose ping.php on /service/healthcheck/gtg
   RewriteEngine on
