@@ -28,6 +28,11 @@ ExtendedStatus On
   <Directory {{ docroot }}>
     AllowOverride All
   </Directory>
+  
+  <Directory {{ docroot }}/html>
+    Order allow,deny
+    Deny from all
+  </Directory>
 
   <IfModule mod_fastcgi.c>
     AddType application/x-httpd-fastphp5 .php
