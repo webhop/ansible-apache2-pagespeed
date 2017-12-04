@@ -134,6 +134,16 @@
 - name: Apply all Ubuntu security updates
   command: /usr/bin/unattended-upgrade
   when: not skip_security_updates|default(False)
+  
+- name: Disable server version leak
+  lineinfile:
+    path: /etc/apache2/conf-available/security.conf
+    line: "ServerTokens prod"
+
+- name: Disable server signature leak
+  lineinfile:
+    path: /etc/apache2/conf-available/security.conf
+    line: "ServerSignature off"
 
 - include: logging.yml
   when: enable_logging
