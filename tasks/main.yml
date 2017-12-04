@@ -137,12 +137,12 @@
   
 - name: Disable server version leak
   lineinfile:
-    path: /etc/apache2/conf-available/security.conf
+    dest: /etc/apache2/conf-available/security.conf
     line: "ServerTokens prod"
 
 - name: Disable server signature leak
   lineinfile:
-    path: /etc/apache2/conf-available/security.conf
+    dest: /etc/apache2/conf-available/security.conf
     line: "ServerSignature off"
 
 - include: logging.yml
