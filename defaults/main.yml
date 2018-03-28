@@ -1,6 +1,7 @@
 apache_force_ssl: true
 enable_pagespeed: False
 enable_mod_status: true
+php_fpm_major_version: "php5"
 enable_php_fpm_status: true
 mod_status_endpoint: "/server-status"
 COMPONENT_NAME: vagrant

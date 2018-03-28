@@ -13,6 +13,7 @@ This role assumes the default site being provisioned is a PHP-based site using t
 
 ##### Defaults
 
+- `php_fpm_major_version` - Which PHP FPM version to use (**php5**)
 - `apache_force_ssl` - Forces apache to respond with https using `SetEnv https on` (**True**)
 - `docroot` - Filesystem path for web assets (**/var/www**)
 - `enable_pagespeed` - Enables google pagespeed integration (**false**)

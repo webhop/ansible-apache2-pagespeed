@@ -35,10 +35,10 @@ ExtendedStatus On
   </Directory>
 
   <IfModule mod_fastcgi.c>
-    AddType application/x-httpd-fastphp5 .php
-    Action application/x-httpd-fastphp5 /php5-fcgi
-    Alias /php5-fcgi /usr/lib/cgi-bin/php5-fcgi
-    FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi -socket {{ php_fpm_socket_path }} -pass-header Authorization -idle-timeout 120
+    AddType application/x-httpd-fast{{ php_fpm_major_version }} .php
+    Action application/x-httpd-fast{{ php_fpm_major_version }} /{{ php_fpm_major_version }}-fcgi
+    Alias /{{ php_fpm_major_version }}-fcgi /usr/lib/cgi-bin/{{ php_fpm_major_version }}-fcgi
+    FastCgiExternalServer /usr/lib/cgi-bin/{{ php_fpm_major_version }}-fcgi -socket {{ php_fpm_socket_path }} -pass-header Authorization -idle-timeout 120
 
     <Directory /usr/lib/cgi-bin>
       Require all granted
@@ -57,8 +57,8 @@ ExtendedStatus On
 
   {% if enable_php_fpm_status %}
   <LocationMatch '/fpm-status'>
-    SetHandler php5-fcgi-virt
-    Action php5-fcgi-virt /php5-fcgi virtual
+    SetHandler {{ php_fpm_major_version }}-fcgi-virt
+    Action {{ php_fpm_major_version }}-fcgi-virt /{{ php_fpm_major_version }}-fcgi virtual
   </LocationMatch>
   {% endif %}
 
@@ -98,10 +98,10 @@ ExtendedStatus On
   </Directory>
 
   <IfModule mod_fastcgi.c>
-    AddType application/x-httpd-fastphp5 .php
-    Action application/x-httpd-fastphp5 /php5-fcgi-ssl
-    Alias /php5-fcgi-ssl /usr/lib/cgi-bin/php5-fcgi-ssl
-    FastCgiExternalServer /usr/lib/cgi-bin/php5-fcgi-ssl -socket {{ php_fpm_socket_path }} -pass-header Authorization -idle-timeout 120
+    AddType application/x-httpd-fast{{ php_fpm_major_version }} .php
+    Action application/x-httpd-fast{{ php_fpm_major_version }} /{{ php_fpm_major_version }}-fcgi-ssl
+    Alias /{{ php_fpm_major_version }}-fcgi-ssl /usr/lib/cgi-bin/{{ php_fpm_major_version }}-fcgi-ssl
+    FastCgiExternalServer /usr/lib/cgi-bin/{{ php_fpm_major_version }}-fcgi-ssl -socket {{ php_fpm_socket_path }} -pass-header Authorization -idle-timeout 120
 
     <Directory /usr/lib/cgi-bin>
       Require all granted
