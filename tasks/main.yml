@@ -52,7 +52,10 @@
     - rewrite
     - headers
     - expires
-    - ssl
+
+- name: Enable SSL if there are certs available
+  apache2_module: name=ssl state=present
+  when: stat_ssl_cert.stat.exists
 
 - name: Enable mod_status apache module
   apache2_module: name=status state=present
