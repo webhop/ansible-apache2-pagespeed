@@ -114,10 +114,6 @@
     src: pagespeed.conf
     dest: /etc/apache2/mods-available/pagespeed.conf
 
-- name: Enable the pagespeed module
-  apache2_module: state=present name=pagespeed
-  when: enable_pagespeed
-
 - name: Disable the pagespeed module
   apache2_module: state=absent name=pagespeed
   when: not enable_pagespeed
@@ -150,3 +146,6 @@
 
 - include: logging.yml
   when: enable_logging
+
+- include: pagespeed.yml
+  when: enable_pagespeed
