@@ -1,0 +1,25 @@
+---
+- include: virtualenv.yml
+
+- name: Enable the pagespeed module
+  apache2_module: state=present name=pagespeed
+
+- name: Print shared_filesystem_type
+  debug:
+    var: shared_filesystem_type
+
+- name: Install Upstart script
+  template:
+    src: upstart/create_pagespeed_cache_folder.conf.j2
+    dest: /etc/init/apache-pagespeed-cache.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Copy the pagespeed-upstart.sh bash script
+  template:
+    src: "pagespeed-upstart.sh.j2"
+    dest: "{{ scripts_dir }}/apache-pagespeed/pagespeed-upstart.sh.j2"
+    owner: "{{ scripts_owner }}"
+    group: "{{ scripts_group }}"
+    mode: 0755

@@ -24,3 +24,8 @@ log_config:
   apache_access:
     log_file: "/var/log/apache2/access.log"
     retention: 1
+
+# sleep time in seconds between retries
+retry_wait: 10
+# max time retrying in seconds
+retry_up_to: 600

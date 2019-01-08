@@ -1,2 +1,14 @@
+---
+# vars file for ansible-apache2-pagespeed
+scripts_dir: '/opt/beamly/scripts'
+virtualenv_dir: '/opt/beamly/virtualenvs'
+scripts_owner: root
+scripts_group: root
+
 docroot: /var/www
 php_fpm_socket_path: '/var/run/php/php5.6-fpm.sock'
+
+shared_filesystem_owner: www-data
+efs_shared_mount_point: /mnt/efs_shared
+gluster_shared_mount_point: /mnt/gluster_shared
+none_shared_mount_point: /mnt/none_shared

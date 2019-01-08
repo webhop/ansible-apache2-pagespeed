@@ -1,0 +1,11 @@
+description "Upstart task for create_pagespeed_cache_folder"
+author "Beamly Platform Team <platform@beamly.com>"
+
+start on filesystem
+
+task
+console log
+
+script
+        exec bash -c {{ scripts_dir }}/apache-pagespeed/pagespeed-upstart.sh.j2
+end script

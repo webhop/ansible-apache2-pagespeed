@@ -1,0 +1,46 @@
+#!/bin/bash
+
+{% if shared_filesystem_type|default('') == "none" %}
+    MOUNT_POINT="{{ none_shared_mount_point }}"
+    FS_TYPE="none"
+{% else %}
+    # Poll mountpoints retrying for {{ retry_up_to }} seconds
+    END=$((SECONDS+{{ retry_up_to }}))
+
+    echo "Detecting FS mountpoint (may take a while)..."
+
+    while [ "${MOUNT_POINT}" == "" ] && [ "${SECONDS}" -lt "${END}" ];
+    do
+        if /bin/mountpoint -q {{ gluster_shared_mount_point }}; then
+            MOUNT_POINT="{{ gluster_shared_mount_point }}"
+            FS_TYPE=gluster
+        elif /bin/mountpoint -q {{ efs_shared_mount_point }}; then
+            MOUNT_POINT="{{ efs_shared_mount_point }}"
+            FS_TYPE=efs
+        else
+            sleep {{ retry_wait }}
+        fi
+    done
+
+    if [ "${MOUNT_POINT}" == "" ]; then
+        echo "No valid mountpoints found, bye bye."
+        exit -1
+    fi
+
+    echo "Detected valid mountpoint at ${MOUNT_POINT}."
+{% endif %}
+
+    echo "Ensuring all files directories exist with the proper perms in ${MOUNT_POINT}..."
+    for dir in pagespeed
+    do
+        mkdir -p "${MOUNT_POINT}/${dir}"
+    done
+
+{% if shared_filesystem_type|default('') == "none" %}
+    echo "Chowning /mnt/none_shared to www-data..."
+    chown -R {{ shared_filesystem_owner }}:{{ shared_filesystem_owner }} "${MOUNT_POINT}"
+    echo "Done."
+{% endif %}
+
+    sudo ln -sfn "${MOUNT_POINT}/pagespeed" /tmp/pagespeed
+    echo "Created symlink for Pagespeed cache directory."
