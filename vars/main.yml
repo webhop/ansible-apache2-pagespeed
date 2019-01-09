@@ -6,7 +6,6 @@ scripts_owner: root
 scripts_group: root
 
 docroot: /var/www
-php_fpm_socket_path: '/var/run/php/php5.6-fpm.sock'
 
 shared_filesystem_owner: www-data
 efs_shared_mount_point: /mnt/efs_shared

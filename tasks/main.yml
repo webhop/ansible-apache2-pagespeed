@@ -29,7 +29,7 @@
 - name: Disable Apache2 prefork MPM modules
   command: "a2dismod {{ item }}"
   with_items:
-    - php5.6
+    - "php{{ php_version }}"
     - mpm_prefork
   register: apache2_module_output
   changed_when: apache2_module_output.stdout.find(item + ' already') == -1
