@@ -22,17 +22,22 @@
     owner: www-data
     group: www-data
 
+- name: Download libapache2-mod-fastcgi for Ubuntu 18.04
+  get_url:
+    url: https://s3.amazonaws.com/assets.beamly.com/packages/libapache2-mod-fastcgi_2.4.7_0910052141-1.2_amd64.deb
+    dest: /tmp/libapache2-mod-fastcgi_2.4.7_0910052141-1.2_amd64.deb
+  when: ansible_distribution_release == 'bionic'
+
+- name: Install libapache2-mod-fastcgi for Ubuntu 18.04
+  apt:
+    deb: /tmp/libapache2-mod-fastcgi_2.4.7_0910052141-1.2_amd64.deb
+  when: ansible_distribution_release == 'bionic'
+
 - name: Install libapache2-mod-fastcgi for Ubuntu < 18.04
   apt:
     name: libapache2-mod-fastcgi
     state: latest
   when: not ansible_distribution_release == 'bionic'
-
-- name: Install libapache2-mod-fastcgi for Ubuntu 18.04
-  apt:
-    name: libapache2-mod-fastcgi
-    state: latest
-  when: ansible_distribution_release == 'bionic'
 
 - name: Disable Apache2 prefork MPM modules
   command: "a2dismod {{ item }}"
