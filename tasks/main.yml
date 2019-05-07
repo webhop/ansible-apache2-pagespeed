@@ -9,6 +9,7 @@
     repo: "deb http://eu-central-1.ec2.archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
     update_cache: yes
 
+
 - name: Install latest version of Apache
   apt:
     name: apache2
@@ -21,10 +22,17 @@
     owner: www-data
     group: www-data
 
-- name: Install additional modules
+- name: Install libapache2-mod-fastcgi for Ubuntu < 18.04
   apt:
     name: libapache2-mod-fastcgi
     state: latest
+  when: not ansible_distribution_release == 'bionic'
+
+- name: Install libapache2-mod-fastcgi for Ubuntu 18.04
+  apt:
+    name: libapache2-mod-fastcgi
+    state: latest
+  when: ansible_distribution_release == 'bionic'
 
 - name: Disable Apache2 prefork MPM modules
   command: "a2dismod {{ item }}"
