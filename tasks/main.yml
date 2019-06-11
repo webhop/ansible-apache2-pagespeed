@@ -34,7 +34,6 @@
     repo: "deb http://eu-central-1.ec2.archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
     update_cache: yes
 
-
 - name: Install latest version of Apache
   apt:
     name: apache2
@@ -58,6 +57,18 @@
     name: libapache2-mod-fastcgi
     state: latest
   when: ansible_lsb.major_release|int <= 16
+
+- name: Enable Apache2 modules
+  command: "a2enmod {{ item }}"
+  with_items:
+    - proxy_fcgi
+  when: ansible_lsb.major_release|int > 16
+
+- name: Enable Apache2 PHP-FPM conf
+  command: "a2enconf {{ item }}"
+  with_items:
+    - "php{{ php_version }}-fpm"
+  when: ansible_lsb.major_release|int > 16
 
 - name: Disable Apache2 prefork MPM modules
   command: "a2dismod {{ item }}"
