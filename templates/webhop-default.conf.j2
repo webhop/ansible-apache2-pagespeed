@@ -34,6 +34,10 @@ ExtendedStatus On
     Deny from all
   </Directory>
 
+  <IfModule mod_reqtimeout.c>
+    RequestReadTimeout header=65 body=65
+  </IfModule>
+
   <IfModule mod_fastcgi.c>
     AddType application/x-httpd-fast{{ php_fpm_major_version }} .php
     Action application/x-httpd-fast{{ php_fpm_major_version }} /{{ php_fpm_major_version }}-fcgi
