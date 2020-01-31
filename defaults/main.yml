@@ -1,8 +1,8 @@
 apache_force_ssl: true
 enable_pagespeed: False
 enable_mod_status: true
-php_fpm_major_version: "php5"
-php_version: 5.6
+php_fpm_major_version: "php7"
+php_version: 7.2
 enable_php_fpm_status: true
 mod_status_endpoint: "/server-status"
 php_fpm_socket_path: "/var/run/php/php{{ php_version }}-fpm.sock"
