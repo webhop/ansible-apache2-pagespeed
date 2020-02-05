@@ -1,0 +1,11 @@
+[Unit]
+Description=Unit for create_pagespeed_cache_folder
+
+[Service]
+Type=oneshot
+Environment="DATE_FORMAT=-u +%Y-%m-%dT%T.%3NZ"
+ExecStart=exec bash -c {{ scripts_dir }}/apache-pagespeed/pagespeed-upstart.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
