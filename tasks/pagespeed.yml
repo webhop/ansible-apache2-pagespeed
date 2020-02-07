@@ -30,12 +30,6 @@
     service:
       name: create_pagespeed_cache_folder
       enabled: yes
-
-  - name: Start the create_pagespeed_cache_folder service (systemd)
-    service:
-      name: create_pagespeed_cache_folder
-      state: started
-    ignore_errors: true
   when: ansible_lsb.major_release|int >= 16
 
 - name: Copy the pagespeed-upstart.sh bash script
