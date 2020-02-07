@@ -156,11 +156,6 @@
     group: www-data
     mode: 0700
 
-- name: Write the pagespeed module configuration
-  copy:
-    src: pagespeed.conf
-    dest: /etc/apache2/mods-available/pagespeed.conf
-
 - name: Disable the pagespeed module
   apache2_module: state=absent name=pagespeed
   when: not enable_pagespeed

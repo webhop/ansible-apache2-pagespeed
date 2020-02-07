@@ -44,3 +44,11 @@
 
     sudo ln -sfn "${MOUNT_POINT}/pagespeed" /tmp/pagespeed
     echo "Created symlink for Pagespeed cache directory."
+
+    echo "Templating pagespeed.conf..."
+    {{ virtualenv_dir }}/apache-pagespeed/bin/python {{ scripts_dir }}/apache-pagespeed/write_pagespeed_conf_file.py \
+        --shared-filesystem-type "${FS_TYPE}" \
+        {% if drush_live_domain_override is defined %}--live-domain-override  '{{ drush_live_domain_override }}'{% endif %} \
+        {% if docroot is defined %}--docroot {{ docroot }}{% endif %} \
+        {% if drupal_subdir is defined %}--drupal-subdir {{ drupal_subdir }}{% endif %} \
+    echo "Done."
