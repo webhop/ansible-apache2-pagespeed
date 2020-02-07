@@ -1,6 +1,8 @@
 [Unit]
 Description=Unit for create_pagespeed_cache_folder
-After=network.target
+Requires=network-online.target
+Before=apache2.service
+Documentation=https://github.com/webhop/ansible-apache2-pagespeed
 
 [Service]
 Type=oneshot
