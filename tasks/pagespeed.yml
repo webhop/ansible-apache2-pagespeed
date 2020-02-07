@@ -41,7 +41,7 @@
 - name: Copy the pagespeed-upstart.sh bash script
   template:
     src: "pagespeed-upstart.sh.j2"
-    dest: "{{ scripts_dir }}/apache-pagespeed/pagespeed-upstart.sh.j2"
+    dest: "{{ scripts_dir }}/apache-pagespeed/pagespeed-upstart.sh"
     owner: "{{ scripts_owner }}"
     group: "{{ scripts_group }}"
     mode: 0755
