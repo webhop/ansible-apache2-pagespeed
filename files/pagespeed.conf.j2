@@ -365,6 +365,11 @@
     ModPagespeedJpegRecompressionQuality -1
     ModPagespeedJpegRecompressionQualityForSmallScreens 80
 
+  {% if env == 'live' -%}
     ModPagespeedMapOriginDomain "http://localhost" "{{ live_domain_override | default(fastly_domain,True) }}{{ drupal_subdir }}"
     # ModPagespeedLoadFromFile "{{ live_domain_override | default(fastly_domain,True) }}{{ drupal_subdir }}" "{{ docroot }}/"
+  {%- else -%}
+    ModPagespeedMapOriginDomain "http://localhost" "{{ fastly_domain }}{{ drupal_subdir }}"
+    # ModPagespeedLoadFromFile "{{ fastly_domain }}{{ drupal_subdir }}" "{{ docroot }}/"
+  {%- endif %}
 </IfModule>
