@@ -8,6 +8,22 @@
   debug:
     var: shared_filesystem_type
 
+- name: Copy the pagespeed.conf template
+  copy:
+    src: files/pagespeed.conf.j2
+    dest: "{{ scripts_dir }}/apache-pagespeed/pagespeed.conf.j2"
+    owner: "{{ scripts_owner }}"
+    group: "{{ scripts_group }}"
+    mode: 0755
+
+- name: Copy the webhop-write-pagespeed-conf-file script
+  template:
+    src: "write_pagespeed_conf_file.py.j2"
+    dest: "{{ scripts_dir }}/apache-pagespeed/write_pagespeed_conf_file.py"
+    owner: "{{ scripts_owner }}"
+    group: "{{ scripts_group }}"
+    mode: 0755
+
 - name: Install Upstart script
   template:
     src: upstart/create_pagespeed_cache_folder.conf.j2

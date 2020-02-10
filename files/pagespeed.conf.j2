@@ -3,16 +3,6 @@
     # can set this to "off".
     ModPagespeed on
 
-    ModPagespeedModifyCachingHeaders off
- 
-    # We're behind an ELB - Serve traffic on whatever protocol we're being requested in
-    ModPagespeedRespectXForwardedProto on
-
-    # We want VHosts to inherit global configuration.
-    # If this is not included, they'll be independent (except for inherently
-    # global options), at least for backwards compatibility.
-    ModPagespeedInheritVHostConfig on
-
     # Direct Apache to send all HTML output to the mod_pagespeed
     # output handler.
     AddOutputFilterByType MOD_PAGESPEED_OUTPUT_FILTER text/html
@@ -23,7 +13,7 @@
 
     # The ModPagespeedFileCachePath directory must exist and be writable
     # by the apache user (as specified by the User directive).
-    ModPagespeedFileCachePath            "/tmp/pagespeed"
+    ModPagespeedFileCachePath            "/tmp/pagespeed/"
 
     # LogDir is needed to store various logs, including the statistics log
     # required for the console.
@@ -31,7 +21,6 @@
 
     # The locations of SSL Certificates is distribution-dependent.
     ModPagespeedSslCertDirectory "/etc/ssl/certs"
-
 
     # If you want, you can use one or more memcached servers as the store for
     # the mod_pagespeed cache.
@@ -58,7 +47,7 @@
     # ModPagespeedDisableFilters. This directive contains a
     # comma-separated list of filter names, and can be repeated.
     #
-    ModPagespeedDisableFilters convert_jpeg_to_webp,convert_to_webp_animated,convert_to_webp_lossless,convert_png_to_jpeg
+    # ModPagespeedDisableFilters rewrite_images
 
     # Explicitly enables specific filters. This is useful in
     # conjuction with ModPagespeedRewriteLevel. For instance, filters
@@ -88,7 +77,7 @@
     # mod_pagespeed will wait indefinitely for the rewrite to complete before
     # returning.
     #
-    ModPagespeedRewriteDeadlinePerFlushMs 500
+    # ModPagespeedRewriteDeadlinePerFlushMs 10
 
     # ModPagespeedDomain
     # authorizes rewriting of JS, CSS, and Image files found in this
@@ -141,7 +130,7 @@
     ModPagespeedFileCacheInodeLimit        500000
 
     # Bound the number of images that can be rewritten at any one time; this
-    # avoids overloading the CPU.  Set this to 0 to remove the bound.
+    # avoids overloading the CPU.  Set this to -1 to remove the bound.
     #
     # ModPagespeedImageMaxRewritesAtOnce      8
 
@@ -185,7 +174,7 @@
     # User-Agent headers as appropriate.  Note that this may require configuring
     # reverse proxy caches such as varnish to handle these headers properly.
     #
-    # ModPagespeedFilters in_place_optimize_for_browser
+    # ModPagespeedEnableFilters in_place_optimize_for_browser
 
     # Internet Explorer has difficulty caching resources with Vary: headers.
     # They will either be uncached (older IE) or require revalidation.  See:
@@ -199,11 +188,11 @@
     # Settings for image optimization:
     #
     # Lossy image recompression quality (0 to 100, -1 just strips metadata):
-    ModPagespeedImageRecompressionQuality 80
+    # ModPagespeedImageRecompressionQuality 85
     #
     # Jpeg recompression quality (0 to 100, -1 uses ImageRecompressionQuality):
-    ModPagespeedJpegRecompressionQuality -1
-    ModPagespeedJpegRecompressionQualityForSmallScreens 80
+    # ModPagespeedJpegRecompressionQuality -1
+    # ModPagespeedJpegRecompressionQualityForSmallScreens 70
     #
     # WebP recompression quality (0 to 100, -1 uses ImageRecompressionQuality):
     # ModPagespeedWebpRecompressionQuality 80
@@ -353,4 +342,29 @@
     # its default value is 100k bytes.
     # Set it to 0 if you want to disable this feature.
     ModPagespeedMessageBufferSize 100000
+
+    # Beamly configuration.
+    ModPagespeedModifyCachingHeaders off
+
+    # We're behind an ELB - Serve traffic on whatever protocol we're being requested in
+    ModPagespeedRespectXForwardedProto on
+
+    # We want VHosts to inherit global configuration.
+    # If this is not included, they'll be independent (except for inherently
+    # global options), at least for backwards compatibility.
+    ModPagespeedInheritVHostConfig on
+
+    ModPagespeedDisableFilters convert_jpeg_to_webp,convert_to_webp_animated,convert_to_webp_lossless,convert_png_to_jpeg
+
+    ModPagespeedRewriteDeadlinePerFlushMs 500
+
+    # Settings for image optimization:
+    # Lossy image recompression quality (0 to 100, -1 just strips metadata):
+    ModPagespeedImageRecompressionQuality 80
+    # Jpeg recompression quality (0 to 100, -1 uses ImageRecompressionQuality):
+    ModPagespeedJpegRecompressionQuality -1
+    ModPagespeedJpegRecompressionQualityForSmallScreens 80
+
+    ModPagespeedMapOriginDomain "http://localhost" "{{ live_domain_override | default(fastly_domain,True) }}{{ drupal_subdir }}"
+    # ModPagespeedLoadFromFile "{{ live_domain_override | default(fastly_domain,True) }}{{ drupal_subdir }}" "{{ docroot }}/"
 </IfModule>

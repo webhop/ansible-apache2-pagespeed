@@ -1,0 +1,183 @@
+#!/usr/bin/env python
+
+'''
+Reads various settings from AWS, RDS, elasticache, and renders some configuration file templates
+'''
+
+import hashlib
+import jinja2
+import logging
+import os
+import re
+import requests
+import time
+from optparse import OptionParser
+import boto3
+import backoff
+from requests.exceptions import ConnectionError
+
+LOG = logging.getLogger(__name__)
+
+EC2_METADATA_SERVICE_ENDPOINT = "http://169.254.169.254/latest"
+
+RENDER_FILES = {'{{ scripts_dir }}/apache-pagespeed/pagespeed.conf.j2': '/etc/apache2/mods-available/pagespeed.conf'}
+
+def get_command_line_options():
+    parser = OptionParser()
+    parser.add_option("--shared-filesystem-type", action="store", dest="shared_filesystem_type", type="string", default="efs")
+    parser.add_option("--live-domain-override", action="store", dest="live_domain_override", type="string", default="")
+    parser.add_option("--docroot", action="store", dest="docroot", type="string", default="{{ drupal_docroot | default(docroot,True) }}")
+    parser.add_option("--drupal-subdir", action="store", dest="drupal_subdir", type="string", default="")
+    (options, args) = parser.parse_args()
+    return options
+
+
+def parse_tags(original_tags=[]):
+    tags = {}
+    for tag in original_tags:
+        tags[tag["Key"]] = tag["Value"]
+    return tags
+
+
+@backoff.on_exception(backoff.fibo,
+                      requests.exceptions.RequestException,
+                      max_tries=3)
+def get_instance_identity(timeout=2):
+    return requests.get('{0}/dynamic/instance-identity/document'.format(
+        EC2_METADATA_SERVICE_ENDPOINT
+    ), timeout=timeout).json()
+
+
+@backoff.on_exception(backoff.fibo,
+                      requests.exceptions.RequestException,
+                      max_tries=3)
+def get_instance_reservation_id(timeout=2):
+    return requests.get('{0}/meta-data/reservation-id'.format(
+        EC2_METADATA_SERVICE_ENDPOINT
+    ), timeout=timeout).text
+
+
+
+def get_instance_config():
+    """
+    Use the instance metadata API to get region, instance ID
+
+    """
+    LOG.info("Finding instance reservation ID and ENI ID...")
+    config = {}
+    # Find my instance ID
+    try:
+        identity_data = get_instance_identity()
+        reservation_id = get_instance_reservation_id()
+    except ConnectionError:
+        # IndexError because boto throws this
+        # when it tries to parse empty response
+        raise SystemExit(
+            "Could not connect to instance metadata endpoint, bailing...")
+
+    config["inst_id"] = identity_data["instanceId"]
+    config["region"] = identity_data["region"]
+    config["reservation_id"] = reservation_id
+
+    for k, v in config.iteritems():
+        LOG.info("Found %s with value %s", k, v)
+    return config
+
+
+def get_my_instance_object(instance_id, region, required_tags=None):
+    """
+    Queries AWS and retrieves an instance object for the given
+    instance ID.
+    """
+    LOG.info("Searching for instance object with ID: %s", instance_id)
+
+    conn = boto3.client('ec2', region_name=region)
+    response = conn.describe_instances()
+
+    instances = [i for r in response["Reservations"] for i in r["Instances"]]
+    for instance in instances:
+        if instance["InstanceId"] == instance_id:
+            LOG.info("Found instance object")
+
+            # Check it has tags before returning
+            if required_tags:
+                instance = poll_inst_tags(
+                    instance, required_tags=required_tags)
+            return instance
+
+
+def poll_inst_tags(inst, required_tags=None):
+    """
+    Polls instance object until all required tags are present
+
+    """
+    tags = parse_tags(inst["Tags"])
+    while not all(tag in tags for tag in required_tags):
+        LOG.info("Waiting 5 seconds for tags to be available...")
+        time.sleep(5)
+        inst.update()
+
+    LOG.info("Instance had tags...")
+    return inst
+
+
+def get_my_vpc(vpc_id, region="eu-central-1"):
+    conn = boto3.client('ec2', region)
+    try:
+        return conn.describe_vpcs(VpcIds=[vpc_id])["Vpcs"][0]
+    except Exception:
+         LOG.error("Found no vpc with ID: %s, bailing...", vpc_id)
+         raise SystemExit("Could not find vpc")
+
+def write_config():
+    LOG.info("Getting instance metadata...")
+    inst_config = get_instance_config()
+    region = inst_config["region"]
+
+    required_tags = ["brand", "environment"]
+
+    # Get instance object
+    inst = get_my_instance_object(
+        instance_id=inst_config["inst_id"], 
+        region=region, 
+        required_tags=required_tags
+    )
+    tags = parse_tags(inst["Tags"])
+    vpc_id = inst["VpcId"]
+
+    # get vpc object
+    my_vpc = get_my_vpc(vpc_id)
+
+    # parse tags
+    vpc_tags = {}
+    for tag in my_vpc["Tags"]:
+        vpc_tags[tag["Key"]] = tag["Value"]
+
+    LOG.info("Using domain name: %s", vpc_tags["domain_name"])
+    template_vars = {}
+    template_vars["fastly_domain"] = "https://{0}".format(vpc_tags["domain_name"])
+
+    template_vars["env"] = tags["environment"]
+    template_vars["brand"] = tags["brand"]
+
+    options = get_command_line_options()
+    template_vars["live_domain_override"] = options.live_domain_override
+    template_vars["shared_filesystem_type"] = options.shared_filesystem_type
+    template_vars["docroot"] = options.docroot
+    template_vars["drupal_subdir"] = options.drupal_subdir
+    # write the settings file from the template
+    templateLoader = jinja2.FileSystemLoader(searchpath="/")
+    templateEnv = jinja2.Environment(loader=templateLoader)
+
+    for template_source in RENDER_FILES:
+        template = templateEnv.get_template(template_source)
+        template_render_target = RENDER_FILES[template_source]
+
+        with open(template_render_target, 'w') as f:
+            os.chmod(template_render_target, 0o0644) # protect file from modifications
+            f.write(template.render(template_vars))
+
+if __name__ == "__main__":
+    FORMAT = "%(asctime)-15s : %(levelname)-8s : %(message)s"
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    write_config()
