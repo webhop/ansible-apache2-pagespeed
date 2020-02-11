@@ -103,10 +103,14 @@
     insertbefore: '\s*RewriteRule \D index\.php \[L\]'
   when: stat_htaccess.stat.exists and enable_mod_status
 
+- name: Download Google pagespeed module
+  get_url:
+    url: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
+    dest: "/tmp/pagespeed.deb"
+
 - name: Install Google pagespeed
   apt:
-    deb: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
-    force: yes
+    deb: "/tmp/pagespeed.deb"
 
 - name: Delete 000-default.conf
   file:
