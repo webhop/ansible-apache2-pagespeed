@@ -106,7 +106,6 @@
 - name: Install Google pagespeed
   apt:
     deb: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
-    force_apt_get: yes
     force: yes
 
 - name: Delete 000-default.conf
