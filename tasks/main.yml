@@ -1,16 +1,4 @@
 ---
-# Pagespeed module is failing on apt-cache update just after upgrading to Ubuntu 18.04
-# bodging in a fix from https://support.plesk.com/hc/en-us/articles/360021566754--apt-update-is-not-working-on-Plesk-server-with-Ubuntu-or-Debian-after-installing-PageSpeed-Apache-module-through-Google-PageSpeed-Insights-extension-The-repository-http-dl-google-com-linux-mod-pagespeed-deb-stable-Release-is-not-signed
-
-#- name: Check pagespeed repo file exists
-#  stat: path=/etc/apt/sources.list.d/mod-pagespeed.list
-#  register: ps_apt_stat
-#  failed_when: not ps_apt_stat.stat.exists
-
-#- name: Moving out pagespeed repo
-#  command: mv /etc/apt/sources.list.d/mod-pagespeed.list /tmp/
-#  when: ps_apt_stat.stat.exists
-
 - name: Update the apt-cache to remove pagespeed apt from cache
   apt: update_cache=yes cache_valid_time=3600
 
@@ -18,11 +6,6 @@
   apt_key: 
     url: https://dl-ssl.google.com/linux/linux_signing_key.pub 
     state: present
-
-#- name: Moving pagespeed repo back in ready for the update
-#  command: mv /tmp/mod-pagespeed.list /etc/apt/sources.list.d/
-
-# End of bodge
 
 - name: Add Apache2 PPA
   apt_repository:
@@ -33,7 +16,6 @@
   apt_repository:
     repo: "deb http://eu-central-1.ec2.archive.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
     update_cache: yes
-
 
 - name: Install latest version of Apache
   apt:
@@ -121,14 +103,11 @@
     insertbefore: '\s*RewriteRule \D index\.php \[L\]'
   when: stat_htaccess.stat.exists and enable_mod_status
 
-- name: Download Google pagespeed module
-  get_url:
-    url: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
-    dest: "/tmp/pagespeed.deb"
-
 - name: Install Google pagespeed
   apt:
-    deb: "/tmp/pagespeed.deb"
+    deb: "https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb"
+    force_apt_get: yes
+    force: yes
 
 - name: Delete 000-default.conf
   file:
@@ -171,7 +150,27 @@
     name: apache2
     state: stopped
   ignore_errors: true
-  
+
+# Pagespeed module is failing on apt-cache update just after upgrading to Ubuntu 18.04
+# bodging in a fix from https://support.plesk.com/hc/en-us/articles/360021566754--apt-update-is-not-working-on-Plesk-server-with-Ubuntu-or-Debian-after-installing-PageSpeed-Apache-module-through-Google-PageSpeed-Insights-extension-The-repository-http-dl-google-com-linux-mod-pagespeed-deb-stable-Release-is-not-signed
+
+- name: Check pagespeed repo file exists
+  stat: path=/etc/apt/sources.list.d/mod-pagespeed.list
+  register: ps_apt_stat
+  failed_when: not ps_apt_stat.stat.exists
+
+- name: Moving out pagespeed repo
+  command: mv /etc/apt/sources.list.d/mod-pagespeed.list /tmp/
+  when: ps_apt_stat.stat.exists
+
+- name: Update the apt-cache to remove pagespeed apt from cache
+  apt: update_cache=yes cache_valid_time=3600
+
+#- name: Moving pagespeed repo back in ready for the update
+#  command: mv /tmp/mod-pagespeed.list /etc/apt/sources.list.d/
+
+# End of bodge
+
 - name: Apply all Ubuntu security updates
   command: /usr/bin/unattended-upgrade
   when: not skip_security_updates|default(False)
