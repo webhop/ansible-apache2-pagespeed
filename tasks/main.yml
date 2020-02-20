@@ -160,7 +160,6 @@
 - name: Check pagespeed repo file exists
   stat: path=/etc/apt/sources.list.d/mod-pagespeed.list
   register: ps_apt_stat
-  failed_when: not ps_apt_stat.stat.exists
 
 - name: Moving out pagespeed repo
   command: mv /etc/apt/sources.list.d/mod-pagespeed.list /tmp/
