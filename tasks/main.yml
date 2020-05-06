@@ -29,19 +29,10 @@
     owner: www-data
     group: www-data
 
-# Found this here: https://www.digitalocean.com/community/tutorials/how-to-configure-nginx-as-a-web-server-and-reverse-proxy-for-apache-on-one-ubuntu-18-04-server
-# Which points to here: https://mirrors.edge.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
-# Which I've uploaded to S3 to prevent panic when mirrors.edge.kernel.org inevitably goes offline.
-
-- name: Download libapache2-mod-fastcgi for Ubuntu 18.04
-  get_url:
-    url: https://s3.amazonaws.com/assets.beamly.com/packages/libapache2-mod-fastcgi_2.4.7_0910052141-1.2_amd64.deb
-    dest: /tmp/libapache2-mod-fastcgi_2.4.7_0910052141-1.2_amd64.deb
-  when: ansible_lsb.major_release|int > 16
-
-- name: Install libapache2-mod-fastcgi for Ubuntu 18.04
+- name: Install libapache2-mod-fcgid for Ubuntu 18.04
   apt:
-    deb: /tmp/libapache2-mod-fastcgi_2.4.7_0910052141-1.2_amd64.deb
+    name: libapache2-mod-fcgid
+    state: latest
   when: ansible_lsb.major_release|int > 16
 
 - name: Install libapache2-mod-fastcgi for Ubuntu < 18.04
@@ -49,6 +40,18 @@
     name: libapache2-mod-fastcgi
     state: latest
   when: ansible_lsb.major_release|int <= 16
+
+- name: Enable Apache2 modules
+  command: "a2enmod {{ item }}"
+  with_items:
+    - proxy_fcgi
+  when: ansible_lsb.major_release|int > 16
+
+- name: Enable Apache2 PHP-FPM conf
+  command: "a2enconf {{ item }}"
+  with_items:
+    - "php{{ php_version }}-fpm"
+  when: ansible_lsb.major_release|int > 16
 
 - name: Disable Apache2 prefork MPM modules
   command: "a2dismod {{ item }}"
